@@ -15,7 +15,6 @@ from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 
 #--------------------------------------------------------------------
 
-@cache_page(60 * 15)
 def home(request):
     things = Things.objects.all()
     context = {
@@ -32,7 +31,7 @@ class CategoryView(generics.ListCreateAPIView):
     permission_classes = (AllowAny,)
 
 
-@cache_page(60 * 15)
+@cache_page(60 * 5)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def CategoryThings(request, slug):
@@ -42,7 +41,7 @@ def CategoryThings(request, slug):
         serializer = ThingsSerializer(thing, many=True, context={'request': request})
         return Response(serializer.data)
     
-@cache_page(60 * 15)
+@cache_page(60 * 5)
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def ThingImages(request):
@@ -51,7 +50,7 @@ def ThingImages(request):
         serializer = ImagesSerializer(imgs, many=True, context={'request': request})
         return Response(serializer.data)
 
-@cache_page(60 * 15)
+@cache_page(60 * 5)
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def ThingImagesDetail(request, pk):

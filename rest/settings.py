@@ -13,10 +13,6 @@ SECRET_KEY = 'django-insecure-=teh2b1^+rq1_=44b_$d!jv9k6o-yvc@v)lt4qhqdin41s+%8+
 
 DEBUG = True
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
@@ -78,22 +74,9 @@ TEMPLATES = [
     },
 ]
 
-# CACHES dictionary, which contains caching configurations.
-
-# database
-
-# CACHES = {
-#     # we use "default" as the alias.
-#     "default": {
-#         # Here, we're using the database-backed cache backend.
-#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-
-#         # Provide a LOCATION parameter to specify the database table name where cached data will be stored.
-#         "LOCATION": "my_cache_table",
-#     }
-# }
-
-# Redis
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 CACHES = {
     "default": {
@@ -104,32 +87,24 @@ CACHES = {
 
 WSGI_APPLICATION = 'rest.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'shoes',
-#         'USER': 'root',
-#         'PASSWORD': 'Tigerking0506',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shop',
-        'USER': 'root',
-        'PASSWORD': 'tigerking0506',
-        'HOST': 'localhost',
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "OPTIONS": {
+            "service": "my_service",
+            "passfile": ".my_pgpass",
+        },
     }
 }
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'shop',
+#         'USER': 'root',
+#         'PASSWORD': 'tigerking0506',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
 #     }
 # }
 
@@ -159,16 +134,8 @@ USE_TZ = True
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -205,8 +172,6 @@ SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "pk",
     "USER_ID_CLAIM": "user_id",
-    # "USER_ID_FIELD": "email",
-    # "USER_ID_CLAIM": "email",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
