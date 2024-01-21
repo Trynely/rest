@@ -31,4 +31,8 @@ urlpatterns = [
     path('add-to-wishlist/<int:pk>/', addToWishlist),
     path('delete-from-wishlist/<int:pk>/', deleteFromWishlist),
     path('clear-wishlist/', clearWishlist),
+
+    path('filter-min-things/<str:slug>/', FilterMinThings),
+    path('filter-max-things/<str:slug>/', FilterMaxThings),
+    path('test/<str:slug>/', SearchThings),
 ]

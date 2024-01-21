@@ -92,10 +92,21 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "OPTIONS": {
             "service": "my_service",
-            "passfile": ".my_pgpass",
+            "passfile": ".pgpass",
         },
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'shoes',
+#         'USER': 'postgres',
+#         'PASSWORD': 'tigerking0506',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {

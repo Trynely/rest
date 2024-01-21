@@ -29,6 +29,7 @@ class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (AllowAny,)
+    
 
 
 @cache_page(60 * 5)
@@ -142,6 +143,42 @@ class ThingsDetailView(generics.RetrieveUpdateDestroyAPIView):
         
 #         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+#-------------------------------------------------------------
+#FILTER THINGS
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def FilterMinThings(request, slug):
+    if request.method == "GET":
+        category = get_object_or_404(Category, slug=slug)
+        things = Things.objects.filter(category=category).order_by("price")
+        serializer = ThingsSerializer(things, many=True, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def FilterMaxThings(request, slug):
+    if request.method == "GET":
+        category = get_object_or_404(Category, slug=slug)
+        things = Things.objects.filter(category=category).order_by("-price")
+        serializer = ThingsSerializer(things, many=True, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def SearchThings(request, slug):
+    if request.method == "POST":
+        category = get_object_or_404(Category, slug=slug)
+        search = request.data
+        things = Things.objects.filter(category=category, title__startswith=search["title"])
+        serializer = ThingsSerializer(things, many=True, context={"request": request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 #-------------------------------------------------------------
 #CART
@@ -277,10 +314,4 @@ def clearWishlist(request):
     return JsonResponse('clearning is done', safe=False)
 
 
-
-
-
-
-
 # -----------------------------------------------
-
