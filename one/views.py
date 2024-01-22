@@ -61,19 +61,6 @@ def ThingImagesDetail(request, pk):
         serializer = ImagesSerializer(img, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-# class CategoryDetailView(generics.ListCreateAPIView):
-#     queryset = Category.objects.all()
-#     serializer_class = CategorySerializer
-#     permission_classes = (AllowAny,)
-#     lookup_field = 'slug'
-
-#     def list(self, request, slug):
-#         category = get_object_or_404(Category, slug=slug)
-#         thing = Things.objects.filter(category=category)
-#         serializer = ThingsSerializer(thing, many=True, context={'request': request})
-#         return Response(serializer.data)
-
 # -----------------------------------------------------------
 # THINGS
 
@@ -94,58 +81,8 @@ class ThingsDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ThingsSerializer
     permission_classes = (AllowAny,)
 
-
-# @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticated])
-# def thingsList(request):
-#     if request.method == "GET":
-#         things = Things.objects.filter(user=request.user)
-#         serializer = ThingsSerializer(things, many=True)
-#         return Response(serializer.data)
-#     elif request.method == "POST":
-#         serializer = ThingsSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['GET', 'PATCH', 'PUT', 'DELETE'])
-# def thingsDetail(request, pk):
-#     thing = get_object_or_404(Things, id=pk)
-
-#     if request.method == 'GET':
-#         serializer = ThingsSerializer(thing)
-#         return Response(serializer.data)
-
-#     elif request.method == 'PUT':
-#         serializer = ThingsSerializer(thing, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-#     elif request.method == 'DELETE':
-#         thing.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
 #-------------------------------------------------------------
-#IMAGES
-
-# class ImagesView(APIView):
-#     permission_classes = (AllowAny,)
-
-#     def get(self, request):
-#         images = Images.objects.all()
-#         serializer = ImagesSerializer(images, many=True, context={'request': request})
-        
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-#-------------------------------------------------------------
-#FILTER THINGS
+#FILTER AND SEACRHING THINGS
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -173,7 +110,7 @@ def SearchThings(request, slug):
     if request.method == "POST":
         category = get_object_or_404(Category, slug=slug)
         search = request.data
-        things = Things.objects.filter(category=category, title__startswith=search["title"])
+        things = Things.objects.filter(category=category, title__icontains=search["title"])
         serializer = ThingsSerializer(things, many=True, context={"request": request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)

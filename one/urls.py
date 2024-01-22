@@ -34,5 +34,5 @@ urlpatterns = [
 
     path('filter-min-things/<str:slug>/', FilterMinThings),
     path('filter-max-things/<str:slug>/', FilterMaxThings),
-    path('test/<str:slug>/', SearchThings),
+    path('search-things/<str:slug>/', SearchThings),
 ]
