@@ -1,8 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404, render
-from .serializers import CartSerializer, CategorySerializer, ThingsSerializer, WishlistSerializer, ImagesSerializer
-from .models import Images, Things, Category, Cart, Wishlist
+from .serializers import CartSerializer, CategorySerializer, ThingsSerializer, WishlistSerializer, ImagesSerializer, PurchasesSerializer, AddPurchaseSerializer
+from .models import Images, Purchases, Things, Category, Cart, Wishlist
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view, permission_classes
@@ -252,3 +252,24 @@ def clearWishlist(request):
 
 
 # -----------------------------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def purchases(request):
+    if request.method == "GET":
+        purchases = Purchases.objects.all()
+        serializer = PurchasesSerializer(purchases, many=True, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def addPurchase(request):
+    if request.method == "POST":
+        serializer = AddPurchaseSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer.data)
+
+            return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)

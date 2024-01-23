@@ -35,4 +35,7 @@ urlpatterns = [
     path('filter-min-things/<str:slug>/', FilterMinThings),
     path('filter-max-things/<str:slug>/', FilterMaxThings),
     path('search-things/<str:slug>/', SearchThings),
+
+    path('purchases/', purchases),
+    path('add-to-purchases/', addPurchase),
 ]

@@ -95,3 +95,21 @@ class Wishlist(models.Model):
     
     def __str__(self):
         return f'{self.user.email} — {self.title}'
+    
+class Purchases(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
+    title = models.CharField(verbose_name="Название", max_length=200)
+    img = models.ImageField(verbose_name="Изображение", upload_to='image/%Y')
+    selected_size = models.IntegerField(verbose_name="Выбранный размер")
+    price = models.IntegerField(verbose_name="Цена")
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'
+        ordering = ['-updated', '-created']
+    
+    def __str__(self):
+        return f'{self.user.email} — {self.title}'
