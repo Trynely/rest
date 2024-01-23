@@ -264,12 +264,18 @@ def purchases(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def addPurchase(request):
     if request.method == "POST":
         serializer = AddPurchaseSerializer(data=request.data)
+        
         if serializer.is_valid():
-            print(serializer.data)
+            title = serializer.data.get("title")
+            selected_size = serializer.data.get("selected_size")
+            price = serializer.data.get("price")
 
-            return Response(status=status.HTTP_200_OK)
+            Purchases.objects.create(user=request.user, title=title, selected_size=selected_size, price=price)
+
+            return Response(status=status.HTTP_201_CREATED)
+        
     return Response(status=status.HTTP_400_BAD_REQUEST)

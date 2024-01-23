@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Things, Category, Cart, Wishlist, Images
+from .models import Things, Category, Cart, Wishlist, Images, Purchases
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
@@ -16,4 +16,6 @@ admin.site.register(Images)
 admin.site.register(Cart)
 
 admin.site.register(Wishlist)
+
+admin.site.register(Purchases)
 

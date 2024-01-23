@@ -97,9 +97,8 @@ class Wishlist(models.Model):
         return f'{self.user.email} — {self.title}'
     
 class Purchases(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
     title = models.CharField(verbose_name="Название", max_length=200)
-    img = models.ImageField(verbose_name="Изображение", upload_to='image/%Y')
     selected_size = models.IntegerField(verbose_name="Выбранный размер")
     price = models.IntegerField(verbose_name="Цена")
 
