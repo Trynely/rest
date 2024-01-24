@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.urls import reverse
 from django.db import models
 from django.conf import settings
@@ -102,8 +103,8 @@ class Purchases(models.Model):
     selected_size = models.IntegerField(verbose_name="Выбранный размер")
     price = models.IntegerField(verbose_name="Цена")
 
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='Обновлено', auto_now=True)
+    created = models.DateTimeField(verbose_name='Создано', default=datetime.now)
 
     class Meta:
         verbose_name = 'Покупка'
@@ -111,4 +112,4 @@ class Purchases(models.Model):
         ordering = ['-updated', '-created']
     
     def __str__(self):
-        return f'{self.user.email} — {self.title}'
+        return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} — {self.user.email} — {self.title}'

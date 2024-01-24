@@ -29,8 +29,6 @@ class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (AllowAny,)
-    
-
 
 @cache_page(60 * 5)
 @api_view(['GET'])
@@ -41,6 +39,7 @@ def CategoryThings(request, slug):
         thing = Things.objects.filter(category=category)
         serializer = ThingsSerializer(thing, many=True, context={'request': request})
         return Response(serializer.data)
+    
     
 @cache_page(60 * 5)
 @api_view(["GET"])
