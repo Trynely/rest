@@ -75,7 +75,7 @@ class Cart(models.Model):
         ordering = ['-updated', '-created']
     
     def __str__(self):
-        return f'{self.user.email} — {self.title}'
+        return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} | {self.user.email} | {self.title}'
 
 class Wishlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
@@ -95,7 +95,7 @@ class Wishlist(models.Model):
         ordering = ['-updated', '-created']
     
     def __str__(self):
-        return f'{self.user.email} — {self.title}'
+        return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} | {self.user.email} | {self.title}'
     
 class Purchases(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
@@ -112,4 +112,4 @@ class Purchases(models.Model):
         ordering = ['-updated', '-created']
     
     def __str__(self):
-        return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} — {self.user.email} — {self.title}'
+        return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} | {self.user.email} | {self.title}'
