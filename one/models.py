@@ -7,7 +7,7 @@ from django.utils import timezone
 tz = timezone.get_default_timezone()
 
 class Category(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", blank=True, null=True)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     title = models.CharField(verbose_name="Название Категории", max_length=100)
     img = models.ImageField(verbose_name="Изображение", upload_to="image/%Y")
@@ -18,14 +18,13 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        ordering = ["-updated", "-created"]
 
     def __str__(self):
         return self.title
 
 
 class Things(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     title = models.CharField(verbose_name="Название", max_length=200)
@@ -104,12 +103,11 @@ class Purchases(models.Model):
     price = models.IntegerField(verbose_name="Цена")
 
     updated = models.DateTimeField(verbose_name='Обновлено', auto_now=True)
-    created = models.DateTimeField(verbose_name='Создано', default=datetime.now)
+    created = models.DateTimeField(verbose_name='Создано', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Покупка'
         verbose_name_plural = 'Покупки'
-        ordering = ['-updated', '-created']
     
     def __str__(self):
         return f'{self.created.astimezone(tz).strftime("%d.%m.%Y %H:%M")} | {self.user.email} | {self.title}'

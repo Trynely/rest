@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.core.mail import send_mail
 
 #кэш
 from django.utils.decorators import method_decorator
@@ -20,6 +21,17 @@ def home(request):
     context = {
         'things': things
     }
+
+    send_mail(
+    "Лично Тагиру",
+    "здаров, пидарас.",
+    "forconnectme333@gmail.com",
+    ["tagirramaz727@gmail.com"],
+    fail_silently=False,
+    )
+
+    for x in Purchases.objects.all():
+        print(x.created.hour)
     return render(request, 'home.html', context)
 
 
