@@ -1,15 +1,17 @@
 from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404, render
-from .serializers import CartSerializer, CategorySerializer, ThingsSerializer, WishlistSerializer, ImagesSerializer, PurchasesSerializer, AddPurchaseSerializer
+from .serializers import *
 from .models import Images, Purchases, Things, Category, Cart, Wishlist
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
+from templated_mail.mail import BaseEmailMessage
 
 #кэш
+
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie, vary_on_headers
@@ -21,14 +23,6 @@ def home(request):
     context = {
         'things': things
     }
-
-    send_mail(
-    "Лично Тагиру",
-    "здаров, пидарас.",
-    "forconnectme333@gmail.com",
-    ["tagirramaz727@gmail.com"],
-    fail_silently=False,
-    )
 
     for x in Purchases.objects.all():
         print(x.created.hour)
@@ -263,6 +257,8 @@ def clearWishlist(request):
 
 
 # -----------------------------------------------
+#ПОКУПКИ
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def purchases(request):
@@ -290,3 +286,28 @@ def addPurchase(request):
             return Response(status=status.HTTP_201_CREATED)
         
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# -----------------------------------------------
+#СБРОС ПАРОЛЯ ПО ПОЧТЕ
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def sendToEmailResetPassword(request):
+    users = []
+    
+    for user in CustomUser.objects.all():
+        users.append(user.email)
+
+    if request.method == 'POST':
+        serializer = SendResetPasswordToEmailSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = serializer.data.get('email')
+
+            if email in users:
+                BaseEmailMessage(template_name='reset_password.html').send(to=[email])
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_404_NOT_FOUND)

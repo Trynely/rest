@@ -39,3 +39,5 @@ class AddPurchaseSerializer(serializers.Serializer):
     selected_size = serializers.IntegerField()
     price = serializers.IntegerField()
     
+class SendResetPasswordToEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
