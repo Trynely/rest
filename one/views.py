@@ -8,7 +8,6 @@ from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
-from templated_mail.mail import BaseEmailMessage
 
 #кэш
 
@@ -286,28 +285,3 @@ def addPurchase(request):
             return Response(status=status.HTTP_201_CREATED)
         
     return Response(status=status.HTTP_400_BAD_REQUEST)
-
-# -----------------------------------------------
-#СБРОС ПАРОЛЯ ПО ПОЧТЕ
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def sendToEmailResetPassword(request):
-    users = []
-    
-    for user in CustomUser.objects.all():
-        users.append(user.email)
-
-    if request.method == 'POST':
-        serializer = SendResetPasswordToEmailSerializer(data=request.data)
-
-        if serializer.is_valid():
-            email = serializer.data.get('email')
-
-            if email in users:
-                BaseEmailMessage(template_name='reset_password.html').send(to=[email])
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-
-            return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)

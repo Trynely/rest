@@ -7,7 +7,6 @@ from django.utils import timezone
 tz = timezone.get_default_timezone()
 
 class Category(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     title = models.CharField(verbose_name="Название Категории", max_length=100)
     img = models.ImageField(verbose_name="Изображение", upload_to="image/%Y")
@@ -24,7 +23,6 @@ class Category(models.Model):
 
 
 class Things(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь", null=True, blank=True)
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     title = models.CharField(verbose_name="Название", max_length=200)

@@ -23,6 +23,8 @@ from django.middleware.csrf import get_token
 from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, BlacklistedToken
+from templated_mail.mail import BaseEmailMessage
 
 User = get_user_model()
 
@@ -34,6 +36,30 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 def csrf(request):
     return JsonResponse({'csrfToken': get_token(request)})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def getJwtTokenWithoutPassword(request):
+    if request.method == 'POST':
+        serializer = SendResetPasswordToEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.data.get("email")
+            user = User.objects.get(email=email)
+            refresh = RefreshToken.for_user(user)
+
+    return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getJwtTokenWithoutPassword_2(request):
+    user = User.objects.get(email='tagirramaz727@gmail.com')
+    
+    access_token = AccessToken.for_user(user=user)
+    refresh_token = RefreshToken.for_user(user=user)
+
+    return Response({'access': str(access_token), 'refresh': str(refresh_token)})
 
 
 class UserRegister(APIView):
@@ -142,3 +168,29 @@ class TestModel(APIView):
             for l in x:
                 print(x[l])
         return Response(serializer.data)
+
+# -----------------------------------------------
+#СБРОС ПАРОЛЯ ПО ПОЧТЕ
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def sendToEmailResetPassword(request):
+    users = []
+    
+    for user in User.objects.all():
+        users.append(user.email)
+
+    if request.method == 'POST':
+        serializer = SendResetPasswordToEmailSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = serializer.data.get('email')
+            user = User.objects.get(email=email)
+            if email in users:
+                refresh = RefreshToken.for_user(user)
+                BaseEmailMessage(context={'token': refresh.access_token}, template_name='reset_password.html').send(to=[email])
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_404_NOT_FOUND)

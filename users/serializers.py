@@ -17,6 +17,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['img'] = "http://127.0.0.1:8000/media/" + str(user.img)
 
         return token
+
+    
+class SendResetPasswordToEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
     
 #--------------------------------------------------------------------------
 

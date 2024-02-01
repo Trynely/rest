@@ -38,6 +38,3 @@ class AddPurchaseSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)
     selected_size = serializers.IntegerField()
     price = serializers.IntegerField()
-    
-class SendResetPasswordToEmailSerializer(serializers.Serializer):
-    email = serializers.EmailField()

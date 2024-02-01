@@ -38,6 +38,4 @@ urlpatterns = [
 
     path('purchases/', purchases),
     path('add-to-purchases/', addPurchase),
-
-    path('send-reset-password-to-email/', sendToEmailResetPassword),
 ]

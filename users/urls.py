@@ -8,6 +8,7 @@ urlpatterns = [
     
     path('token/', views.MyTokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
+    path('get-jwt-token-without-password/', views.getJwtTokenWithoutPassword),
     path('api/token/verify/', TokenVerifyView.as_view()),
 
     path('avatar/<int:pk>/', views.UserAvatar.as_view()),
@@ -32,4 +33,6 @@ urlpatterns = [
     # path('logout/', views.UserLogout.as_view(), name='logout'),
     # path('csrf/', views.csrf),
     # path('ping/', views.ping),
+
+    path('send-reset-password-to-email/', views.sendToEmailResetPassword),
 ]
