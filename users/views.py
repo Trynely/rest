@@ -25,6 +25,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, BlacklistedToken
 from templated_mail.mail import BaseEmailMessage
+from django.core.exceptions import ObjectDoesNotExist
+from smtplib import SMTPSenderRefused
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 User = get_user_model()
 
@@ -48,7 +53,7 @@ def getJwtTokenWithoutPassword(request):
             user = User.objects.get(email=email)
             refresh = RefreshToken.for_user(user)
 
-    return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
+    return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}) 
 
 
 @api_view(['GET'])
@@ -175,22 +180,44 @@ class TestModel(APIView):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def sendToEmailResetPassword(request):
-    users = []
+    try:
+        if request.method == 'POST':
+            serializer = SendResetPasswordToEmailSerializer(data=request.data)
+
+            if serializer.is_valid():
+                email = serializer.data.get('email')
+                user = User.objects.get(email=email)
+
+                if user:
+                    refresh = RefreshToken.for_user(user)
+                    token = str(refresh.access_token).replace('.', '-')
+                    
+                    send_mail('〽 СБРОС ПАРОЛЯ', None, settings.EMAIL_HOST_USER, [email], fail_silently = False, html_message = render_to_string('reset_password.html', {'email': email, 'protocol': 'http', 'domain': settings.DOMAIN, 'token': token}))
+
+                    # BaseEmailMessage(context={'token': refresh.access_token}, template_name='reset_password.html').send(to=[email])
+
+                return Response({"data": "Письмо со сбросом пароля успешно отправлено!", "token": str(refresh.access_token)}, status=status.HTTP_200_OK)
+    except:
+        return Response({"data": "Данный аккаунт не зарегистрирован или не имеет почтового ящика"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class UserResetPassword(generics.UpdateAPIView):
+    model = User
+
+    serializer_class = UserResetPasswordSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
     
-    for user in User.objects.all():
-        users.append(user.email)
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = UserResetPasswordSerializer(data=request.data)
 
-    if request.method == 'POST':
-        serializer = SendResetPasswordToEmailSerializer(data=request.data)
+        if serializer.is_valid():   
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
 
-        if serializer.is_valid():
-            email = serializer.data.get('email')
-            user = User.objects.get(email=email)
-            if email in users:
-                refresh = RefreshToken.for_user(user)
-                BaseEmailMessage(context={'token': refresh.access_token}, template_name='reset_password.html').send(to=[email])
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-
-            return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"data": "Пароль успешно изменен"}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

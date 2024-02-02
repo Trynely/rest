@@ -59,6 +59,12 @@ class UserChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
 
 
+class UserResetPasswordSerializer(serializers.Serializer):
+    model = User
+    
+    new_password = serializers.CharField(required=True)
+
+
 
 # ---------------------- session auth ----------------------------
 

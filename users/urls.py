@@ -8,18 +8,21 @@ urlpatterns = [
     
     path('token/', views.MyTokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
-    path('get-jwt-token-without-password/', views.getJwtTokenWithoutPassword),
     path('api/token/verify/', TokenVerifyView.as_view()),
 
     path('avatar/<int:pk>/', views.UserAvatar.as_view()),
     path('register/', views.UserRegister.as_view()),
-    path('change-password/', views.UserChangePassword.as_view()),
 
     path('test/', views.Test.as_view()),
     path('test/model/', views.TestModel.as_view()),
     
     # -------- reset password --------
-    
+    path('change-password/', views.UserChangePassword.as_view()),
+    path('send-reset-password-to-email/', views.sendToEmailResetPassword),
+    path('get-jwt-token-without-password/', views.getJwtTokenWithoutPassword),
+    path('reset-user-password/', views.UserResetPassword.as_view()),
+
+
     path('reset-password/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
     path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
@@ -34,5 +37,7 @@ urlpatterns = [
     # path('csrf/', views.csrf),
     # path('ping/', views.ping),
 
-    path('send-reset-password-to-email/', views.sendToEmailResetPassword),
+    # --------  --------
+
+    
 ]
