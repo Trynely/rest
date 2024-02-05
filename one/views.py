@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
 
-#кэш
+# CACHE
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -18,15 +18,7 @@ from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 #--------------------------------------------------------------------
 
 def home(request):
-    things = Things.objects.all()
-    context = {
-        'things': things
-    }
-
-    for x in Purchases.objects.all():
-        print(x.created.hour)
-    return render(request, 'home.html', context)
-
+    return render(request, 'home.html')
 
 # CATEGORY
 
@@ -34,6 +26,7 @@ class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (AllowAny,)
+
 
 @cache_page(60 * 5)
 @api_view(['GET'])
@@ -53,7 +46,9 @@ def ThingImages(request):
     if request.method == "GET":
         imgs = Images.objects.all()
         serializer = ImagesSerializer(imgs, many=True, context={'request': request})
+        
         return Response(serializer.data)
+
 
 @cache_page(60 * 5)
 @api_view(["GET"])
@@ -63,6 +58,7 @@ def ThingImagesDetail(request, pk):
         thing = get_object_or_404(Things, pk=pk)
         img = Images.objects.filter(thing=thing)
         serializer = ImagesSerializer(img, many=True, context={'request': request})
+        
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------
@@ -73,12 +69,6 @@ class ThingsView(generics.ListCreateAPIView):
     serializer_class = ThingsSerializer
     permission_classes = (AllowAny,)
 
-    # ----------------------
-    # ДЛЯ ПОЛЬЗОВАТЕЛЯ
-
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     return Things.objects.filter(user=user)
 
 class ThingsDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Things.objects.all()
@@ -268,6 +258,7 @@ def purchases(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

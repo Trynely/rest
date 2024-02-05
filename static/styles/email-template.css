@@ -1,3 +1,33 @@
-.x {
-    color: rgb(255, 0, 0);
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
+.container {
+    background-color: #ffffffea;
+    padding: 50px;
+    border-radius: 5px;
+}
+
+.text span {
+    color: #222222;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+
+.link {
+    margin-top: 20px;
+    position: relative;
+}
+
+.link a {
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: #222222;
+}
+
+.link span {
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: #883838;
 }

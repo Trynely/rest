@@ -66,6 +66,23 @@ class UserResetPasswordSerializer(serializers.Serializer):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---------------------- session auth ----------------------------
 
 # user login
@@ -82,26 +99,3 @@ class UserResetPasswordSerializer(serializers.Serializer):
 #         return user
     
 # -----------------------------------------------------------------
-
-
-# test
-
-class TestSerializer(serializers.Serializer):
-    text = serializers.CharField(required=False)
-    # name = serializers.CharField(max_length=10)
-    # old = serializers.IntegerField(default=3)
-
-    # def validate_text(self, value):
-    #     if 'привет' not in value.lower():
-    #         raise serializers.ValidationError("Не то слово")
-    #     return value
-    
-    # def validate(self, data):
-    #     if not data['text'] == 'hi':
-    #         raise serializers.ValidationError("Не то слово")
-    #     return data
-
-class TestModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email',)

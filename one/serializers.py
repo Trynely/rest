@@ -9,30 +9,36 @@ class ThingsSerializer(serializers.ModelSerializer):
         model = Things
         fields = "__all__"
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
+
 
 class ImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Images
         fields = "__all__"
 
+
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ('id', 'user', 'title', 'text', 'img', 'price', 'quantity', 'updated', 'created')
+
 
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
         fields = ('id', 'user', 'title', 'text', 'img', 'price', 'quantity', 'updated', 'created')
 
+
 class PurchasesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchases
         fields = '__all__'
+
 
 class AddPurchaseSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)

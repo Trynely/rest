@@ -2,15 +2,12 @@ from django.urls import path
 from django.contrib import admin
 from .views import *
 from django.urls import reverse
-from django.db import models
-from uuid import uuid4
-from django.contrib.auth.models import User
 from django.contrib.auth.views import *
 from .views import *
-from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('', home, name='home'),
+    
     path('things/', cache_page(60 * 5, key_prefix="things")(ThingsView.as_view())),
     path('things/<int:pk>/', ThingsDetailView.as_view()),
     
