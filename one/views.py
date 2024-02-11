@@ -36,6 +36,7 @@ def CategoryThings(request, slug):
         category = get_object_or_404(Category, slug=slug)
         thing = Things.objects.filter(category=category)
         serializer = ThingsSerializer(thing, many=True, context={'request': request})
+        
         return Response(serializer.data)
     
     
@@ -88,6 +89,7 @@ def FilterMinThings(request, slug):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def FilterMaxThings(request, slug):
@@ -97,6 +99,7 @@ def FilterMaxThings(request, slug):
         serializer = ThingsSerializer(things, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
